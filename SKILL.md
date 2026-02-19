@@ -20,7 +20,7 @@ license: MIT
 metadata:
   author: AI Visuals
   version: "1.0.0"
-  homepage: https://github.com/YOUR_USERNAME/seedream-image-skill
+  homepage: https://github.com/ppdbxdawj/seedream-image-skill
   tags:
     - ai-image-generation
     - prompt-engineering

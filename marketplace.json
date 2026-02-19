@@ -5,8 +5,8 @@
   "description_zh": "为即梦AI（Seedream 5.0）生成高质量图片提示词。支持文生图、图生图、多图融合、多轮编辑、知识卡片、海报、角色一致性、PPT背景、电商产品图等各类场景。",
   "author": "AI Visuals",
   "license": "MIT",
-  "homepage": "",
-  "repository": "",
+  "homepage": "https://github.com/ppdbxdawj/seedream-image-skill",
+  "repository": "https://github.com/ppdbxdawj/seedream-image-skill",
   "categories": [
     "ai-image-generation",
     "prompt-engineering",

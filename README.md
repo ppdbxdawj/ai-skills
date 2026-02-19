@@ -23,13 +23,13 @@
 ### Cursor / Claude Code / Cline / Other Agents
 
 ```bash
-npx skills add YOUR_USERNAME/seedream-image-skill@seedream-image
+npx skills add ppdbxdawj/seedream-image-skill@seedream-image
 ```
 
 ### Manual Install
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/seedream-image-skill.git
+git clone https://github.com/ppdbxdawj/seedream-image-skill.git
 cp -r seedream-image-skill/seedream-image ~/.cursor/skills/
 ```
 
