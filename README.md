@@ -1,8 +1,14 @@
-# Seedream Image Prompt Skill
+# AI Skills
 
-**Generate high-quality prompts for [Seedream 5.0/4.0](https://jimeng.jianying.com/) (即梦AI) by ByteDance — describe your idea, review the prompt, confirm, and get images auto-downloaded to your machine.**
+**Agent skills collection — [ppdbxdawj/ai-skills](https://github.com/ppdbxdawj/ai-skills).**
 
-**为字节即梦AI 生成高质量提示词：描述想法 → 审核提示词 → 确认后自动生图并下载到本地。**
+**Agent 技能合集。**
+
+## Skills | 技能列表
+
+| Skill | Description |
+|-------|-------------|
+| **seedream-image** | Generate high-quality prompts for [Seedream 5.0/4.0](https://jimeng.jianying.com/) (即梦AI); confirm and get images auto-downloaded. 为即梦AI 生成高质量提示词，确认后自动生图并下载。 |
 
 [English](#english) | [中文](#中文)
 
@@ -26,19 +32,19 @@
 - **Style Dictionary** — 200+ curated style keywords organized by category
 - **API Reference** — Seedream 4.0 visual API docs, size charts, and Python examples
 
-### Quick Install
+### Quick Install (seedream-image)
 
 **Cursor / Claude Code / Cline / Other Agents:**
 
 ```bash
-npx skills add ppdbxdawj/seedream-image-skill@seedream-image
+npx skills add ppdbxdawj/ai-skills@seedream-image
 ```
 
 **Manual:**
 
 ```bash
-git clone https://github.com/ppdbxdawj/seedream-image-skill.git
-cp -r seedream-image-skill/seedream-image ~/.cursor/skills/
+git clone https://github.com/ppdbxdawj/ai-skills.git
+cp -r ai-skills/seedream-image ~/.cursor/skills/
 ```
 
 ### How It Works
@@ -126,16 +132,17 @@ python generate.py --prompt "Generate 4 blind box figures: crow, rabbit, dog, ca
 
 </details>
 
-### File Structure
+### Repo Structure
 
 ```
-seedream-image/
-├── SKILL.md          # Prompt structures, style vocabulary, templates, API usage guide
-├── generate.py       # Seedream 4.0 API generation script (submit + poll + download)
-├── requirements.txt  # Python dependencies (volcengine SDK)
-├── examples.md       # 30+ ready-to-use prompts across 8 categories
-├── reference.md      # Official docs, API params, size charts, 200+ style keywords
-└── marketplace.json  # Skill metadata for search indexing
+ai-skills/
+└── seedream-image/
+    ├── SKILL.md          # Prompt structures, style vocabulary, templates, API usage guide
+    ├── generate.py       # Seedream 4.0 API generation script (submit + poll + download)
+    ├── requirements.txt  # Python dependencies (volcengine SDK)
+    ├── examples.md       # 30+ ready-to-use prompts across 8 categories
+    ├── reference.md      # Official docs, API params, size charts, 200+ style keywords
+    └── marketplace.json  # Skill metadata for search indexing
 ```
 
 ---
@@ -163,14 +170,14 @@ seedream-image/
 **Cursor / Claude Code / Cline / 其他 Agent：**
 
 ```bash
-npx skills add ppdbxdawj/seedream-image-skill@seedream-image
+npx skills add ppdbxdawj/ai-skills@seedream-image
 ```
 
 **手动安装：**
 
 ```bash
-git clone https://github.com/ppdbxdawj/seedream-image-skill.git
-cp -r seedream-image-skill/seedream-image ~/.cursor/skills/
+git clone https://github.com/ppdbxdawj/ai-skills.git
+cp -r ai-skills/seedream-image ~/.cursor/skills/
 ```
 
 ### 使用流程
@@ -255,16 +262,17 @@ python generate.py --prompt "生成4张分别关于春夏秋冬的盲盒组图" 
 
 </details>
 
-### 文件结构
+### 仓库结构
 
 ```
-seedream-image/
-├── SKILL.md          # 提示词结构、风格词汇库、常用模板、API 使用指南
-├── generate.py       # 即梦 4.0 API 生图脚本（提交 + 轮询 + 下载）
-├── requirements.txt  # Python 依赖（volcengine SDK）
-├── examples.md       # 30+ 即用提示词，覆盖 8 大类场景
-├── reference.md      # 官方文档、API 参数、尺寸表、200+ 风格词
-└── marketplace.json  # 搜索索引元数据
+ai-skills/
+└── seedream-image/
+    ├── SKILL.md          # 提示词结构、风格词汇库、常用模板、API 使用指南
+    ├── generate.py       # 即梦 4.0 API 生图脚本（提交 + 轮询 + 下载）
+    ├── requirements.txt  # Python 依赖（volcengine SDK）
+    ├── examples.md       # 30+ 即用提示词，覆盖 8 大类场景
+    ├── reference.md      # 官方文档、API 参数、尺寸表、200+ 风格词
+    └── marketplace.json  # 搜索索引元数据
 ```
 
 ---
