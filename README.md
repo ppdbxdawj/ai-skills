@@ -51,10 +51,19 @@ You don't need to run any commands yourself. The workflow is simple:
 
 That's it! The agent handles prompt engineering, the single/group choice, API calls, polling, and auto-download.
 
-> **One-time setup**: Set your Volcengine API credentials before the first generation. Get them at [Volcengine IAM](https://console.volcengine.com/iam/keymanage/) and enable the service at [Jimeng 4.0](https://console.volcengine.com/ai/ability/detail/10).
+> **One-time setup**: Install deps and set Volcengine API credentials. Get them at [Volcengine IAM](https://console.volcengine.com/iam/keymanage/) and enable [Jimeng 4.0](https://console.volcengine.com/ai/ability/detail/10).
 >
+> **Option A — .env (recommended)**  
+> Create a `.env` file in the **same folder as `generate.py`** (that folder is the skill’s inner directory, e.g. after `npx skills add` it may be under `~/.cursor/skills/` or your project’s skills path). The script loads it automatically; works the same for manual install or `npx skills add`. Do not commit `.env`.
 > ```bash
 > pip install -r requirements.txt
+> # In the directory that contains generate.py, create .env:
+> VOLC_ACCESSKEY=your_access_key
+> VOLC_SECRETKEY=your_secret_key
+> ```
+>
+> **Option B — shell**  
+> ```bash
 > export VOLC_ACCESSKEY="your_access_key"
 > export VOLC_SECRETKEY="your_secret_key"
 > ```
@@ -174,10 +183,19 @@ cp -r seedream-image-skill/seedream-image ~/.cursor/skills/
 
 就这么简单！Agent 会自动处理提示词优化、单张/组图确认、API 调用、轮询和图片下载。
 
-> **首次使用需配置**：设置火山引擎 API 凭证即可。前往 [火山引擎密钥管理](https://console.volcengine.com/iam/keymanage/) 获取密钥，并开通 [即梦 4.0 服务](https://console.volcengine.com/ai/ability/detail/10)。
+> **首次使用需配置**：安装依赖并设置火山引擎 API 凭证。前往 [火山引擎密钥管理](https://console.volcengine.com/iam/keymanage/) 获取密钥，并开通 [即梦 4.0 服务](https://console.volcengine.com/ai/ability/detail/10)。
 >
+> **方式一 — .env（推荐）**  
+> 在 **与 `generate.py` 同一目录**下新建 `.env` 文件（用 `npx skills add` 安装时，该目录一般在 `~/.cursor/skills/` 或项目 skills 路径下）。脚本会自动读取，手动安装或 npx 安装均适用。不要提交 `.env`。
 > ```bash
 > pip install -r requirements.txt
+> # 在 generate.py 所在目录创建 .env，写入：
+> VOLC_ACCESSKEY=你的AccessKey
+> VOLC_SECRETKEY=你的SecretKey
+> ```
+>
+> **方式二 — 终端环境变量**  
+> ```bash
 > export VOLC_ACCESSKEY="你的AccessKey"
 > export VOLC_SECRETKEY="你的SecretKey"
 > ```

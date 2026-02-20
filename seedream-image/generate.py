@@ -7,9 +7,11 @@ Usage:
     python generate.py --prompt "将背景换成海边" --image-urls "https://example.com/photo.jpg"
     python generate.py --prompt "生成一组盲盒" --width 2048 --height 2048
 
-Environment variables:
-    VOLC_ACCESSKEY  - Volcengine Access Key (required)
-    VOLC_SECRETKEY  - Volcengine Secret Key (required)
+Credentials (either):
+    - Environment variables: VOLC_ACCESSKEY, VOLC_SECRETKEY
+    - Or a .env file in the script directory or current directory, with:
+        VOLC_ACCESSKEY=your_access_key
+        VOLC_SECRETKEY=your_secret_key
 """
 
 import argparse
@@ -33,12 +35,34 @@ DEFAULT_MAX_WAIT = 300
 TERMINAL_STATUSES = {"done", "not_found", "expired"}
 
 
+def _load_dotenv() -> None:
+    """Load VOLC_ACCESSKEY / VOLC_SECRETKEY from .env if not already in os.environ."""
+    if os.environ.get("VOLC_ACCESSKEY") and os.environ.get("VOLC_SECRETKEY"):
+        return
+    for base in (Path(__file__).resolve().parent, Path.cwd()):
+        env_file = base / ".env"
+        if not env_file.is_file():
+            continue
+        for line in env_file.read_text(encoding="utf-8", errors="ignore").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if "=" in line:
+                key, _, value = line.partition("=")
+                key, value = key.strip(), value.strip().strip("'\"").strip()
+                if key and key not in os.environ:
+                    os.environ[key] = value
+        break
+
+
 def create_service() -> VisualService:
+    _load_dotenv()
     ak = os.environ.get("VOLC_ACCESSKEY")
     sk = os.environ.get("VOLC_SECRETKEY")
     if not ak or not sk:
-        print("Error: VOLC_ACCESSKEY and VOLC_SECRETKEY environment variables are required.")
-        print("Get them from: https://console.volcengine.com/iam/keymanage/")
+        print("Error: VOLC_ACCESSKEY and VOLC_SECRETKEY are required.")
+        print("Set them via: 1) environment variables, or 2) a .env file in this directory.")
+        print("Get credentials: https://console.volcengine.com/iam/keymanage/")
         sys.exit(1)
 
     service = VisualService()

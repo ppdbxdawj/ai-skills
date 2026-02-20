@@ -212,10 +212,13 @@ Seedream 5.0 是字节跳动推出的新一代 AI 图像生成模型，已在即
 
 ### 环境准备
 
+**方式一（推荐）**：在 **与 `generate.py` 同目录**下新建 `.env`，写入 `VOLC_ACCESSKEY=...` 和 `VOLC_SECRETKEY=...`。脚本按自身所在目录自动查找 `.env`，无论用户是 git 克隆还是 `npx skills add` 安装均生效，Agent 调用时也无需再配环境变量。
+
+**方式二**：在终端 `export VOLC_ACCESSKEY`、`export VOLC_SECRETKEY`。
+
 ```bash
 pip install -r requirements.txt
-export VOLC_ACCESSKEY="your_access_key"   # 从 https://console.volcengine.com/iam/keymanage/ 获取
-export VOLC_SECRETKEY="your_secret_key"
+# .env 或 export 二选一即可
 ```
 
 ### 用法
