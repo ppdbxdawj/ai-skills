@@ -233,5 +233,6 @@ python generate.py --prompt "生成4张分别关于春夏秋冬的盲盒组图"
 
 - Detailed examples & use cases → [examples.md](examples.md)
 - Official docs, API params, size chart, full style dictionary → [reference.md](reference.md)
+- T2I evaluation benchmarks & metrics → use **image-evaluation** skill ([reference](https://github.com/ppdbxdawj/ai-skills/tree/main/image-evaluation))
 - Image generation script → [generate.py](generate.py)
 - Dependencies → [requirements.txt](requirements.txt)

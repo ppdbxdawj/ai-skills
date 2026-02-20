@@ -1,0 +1,7 @@
+# For evaluate_image.py (single-image evaluation & report)
+torch>=1.9.0
+transformers>=4.30.0
+pillow>=9.0.0
+opencv-python-headless>=4.5.0
+# Optional: 图文偏好分，与人工评判更一致；不加可 --no-imagereward 跳过
+image-reward>=1.0
