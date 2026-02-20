@@ -201,7 +201,58 @@ Seedream 5.0 是字节跳动推出的新一代 AI 图像生成模型，已在即
 | **Jianying** 剪映 | App Store | AI Drawing → Seedream 5.0 |
 | **CapCut** (Global) | App Store | AI Image feature |
 
+## API 生图脚本 | Image Generation Script
+
+生成提示词后，可使用 `generate.py` 直接调用即梦 4.0 API 生成图片。
+
+### 环境准备
+
+```bash
+pip install -r requirements.txt
+export VOLC_ACCESSKEY="your_access_key"   # 从 https://console.volcengine.com/iam/keymanage/ 获取
+export VOLC_SECRETKEY="your_secret_key"
+```
+
+### 用法
+
+```bash
+# 文生图
+python generate.py --prompt "一只猫在花园里玩耍，水彩风格"
+
+# 图像编辑（输入参考图）
+python generate.py --prompt "将背景换成海滩" --image-urls "https://example.com/photo.jpg"
+
+# 指定分辨率 + 强制单图
+python generate.py --prompt "电商主图，产品特写" --width 2560 --height 1440 --force-single
+
+# 组图生成
+python generate.py --prompt "生成4张分别关于春夏秋冬的盲盒组图"
+```
+
+### 在 Skill 工作流中使用
+
+当用户确认提示词后，Agent 应调用此脚本生成图片：
+1. 使用本 Skill 的提示词规则生成 prompt
+2. 用户确认 prompt 内容
+3. 调用 `python generate.py --prompt "<confirmed_prompt>"` 发起生成
+4. 等待返回结果（脚本自动轮询），展示生成的图片 URL
+
+### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `--prompt` | 必填，提示词 |
+| `--image-urls` | 输入参考图 URL（最多 10 张） |
+| `--width` / `--height` | 指定输出宽高（需同时传），不传则智能适配 |
+| `--size` | 输出面积（像素），默认 2K（2048×2048） |
+| `--scale` | 文本影响程度 0~1（默认 0.5），越大文本越强 |
+| `--force-single` | 强制只输出 1 张图 |
+| `--watermark` | 添加 AI 水印 |
+| `--output-dir` | base64 图片保存目录（默认 output/） |
+
 ## References | 参考文件
 
 - Detailed examples & use cases → [examples.md](examples.md)
 - Official docs, API params, size chart, full style dictionary → [reference.md](reference.md)
+- Image generation script → [generate.py](generate.py)
+- Dependencies → [requirements.txt](requirements.txt)
