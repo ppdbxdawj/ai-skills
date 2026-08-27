@@ -1,0 +1,38 @@
+[
+  {
+    "clip_id": "EP{{EP}}-C1",
+    "segment": "Seg1",
+    "duration_target": "15s",
+    "start": "本段从哪个画面开始（具体到镜头，例如：Kace 推开会议室门，逆光剪影）",
+    "end": "本段在哪个画面结束（必须有钩子感或情绪落点，例如：他把收购协议拍在桌上，特写）",
+    "summary": "本段核心剧情一句话，必须含 [爽] / [欲] / [反转] 至少一个标签（例如：[爽] 100亿收购宣战，钉死下属一脸震惊）",
+    "location": "LOC02",
+    "characters": ["CHAR01", "CHAR02"],
+    "energy_curve": "冷峻",
+    "pace_note": "5 panel × 3s。视觉重点：剪影 → 中景 → 特写 → 反应 → 截断"
+  },
+  {
+    "clip_id": "EP{{EP}}-C2",
+    "segment": "Seg2",
+    "duration_target": "15s",
+    "start": "...",
+    "end": "...",
+    "summary": "[欲] ...",
+    "location": "LOC01",
+    "characters": ["CHAR01", "CHAR02"],
+    "energy_curve": "缠绵",
+    "pace_note": "..."
+  },
+  {
+    "clip_id": "EP{{EP}}-C3",
+    "segment": "Seg3",
+    "duration_target": "15s",
+    "start": "...",
+    "end": "**截断式 cliffhanger**，明确指向下集（例如：黑粉的刀划过 Kace 手臂，血色 → 黑屏 → EP{{EP+1}}）",
+    "summary": "[反转] ...",
+    "location": "LOC03",
+    "characters": ["CHAR01", "CHAR02", "CHAR05"],
+    "energy_curve": "骤变",
+    "pace_note": "节奏从舒缓到爆裂，最后一帧定格"
+  }
+]

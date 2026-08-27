@@ -1,0 +1,142 @@
+{
+  "EP{{EP}}": [
+    {
+      "clip_id": "EP{{EP}}-C1",
+      "segment": "Seg1",
+      "screenplay": {
+        "title": "本段戏的标题（例如：办公室宣战）",
+        "content": [
+          "0-3s：Kace 推开 Zen 的更衣室门，手里拿着收购协议。",
+          "3-7s：Kace 走到 Zen 面前，把协议拍在桌上。",
+          "7-11s：Zen 抬眼，没动，看着 Kace。",
+          "11-14s：Kace 倾身贴近 Zen 耳边：「ZK Entertainment. I'm buying it.」",
+          "14-15s：Zen 倒抽一口气，画面冻结，黑屏。"
+        ]
+      },
+      "panels": [
+        {
+          "panel_number": 1,
+          "shot_type": "近景",
+          "camera_move": "固定",
+          "duration": "3s",
+          "description": "Kace 推开门，门把转动声 + 急促脚步停在画面左侧",
+          "photographyPlan": {
+            "lighting": "门外冷白逆光 + 室内暖黄面光",
+            "colorPalette": "冷蓝 + 暖琥珀对比",
+            "atmosphere": "压迫感",
+            "technicalNotes": "人物剪影优先，眼神高光突出"
+          },
+          "actingNotes": [
+            { "name": "凯斯·诺克斯", "acting": "右手按门框，下颌微抬，眼神锁定画面右侧" }
+          ],
+          "audio": {
+            "dialogue": [],
+            "sfx": "门轴吱呀 + 衣料摩擦",
+            "bgm": "低音鼓点起拍"
+          }
+        },
+        {
+          "panel_number": 2,
+          "shot_type": "中景",
+          "camera_move": "缓慢推进",
+          "duration": "3s",
+          "description": "Kace 走到 Zen 面前，把协议拍在桌上",
+          "photographyPlan": {
+            "lighting": "侧顶光，强调下颌轮廓",
+            "colorPalette": "暖琥珀为主",
+            "atmosphere": "宣战感",
+            "technicalNotes": "纸张拍桌的瞬间作为节奏点"
+          },
+          "actingNotes": [
+            { "name": "凯斯·诺克斯", "acting": "右手把文件拍下，左手插裤袋" },
+            { "name": "陈泽川", "acting": "原本低头补妆，被声音震到，缓慢抬眼" }
+          ],
+          "audio": {
+            "dialogue": [
+              { "type": "dialogue", "character": "Kace", "text": "签字。", "voice_note": "低沉胸腔音，半拍延后" }
+            ],
+            "sfx": "纸张拍桌 + 化妆品轻响",
+            "bgm": "鼓点继续"
+          }
+        },
+        {
+          "panel_number": 3,
+          "shot_type": "特写",
+          "camera_move": "固定",
+          "duration": "3s",
+          "description": "Zen 抬眼，没动，看着 Kace",
+          "photographyPlan": {
+            "lighting": "镜面台灯反射，眼睛高光",
+            "colorPalette": "暖光 + 镜面冷反射",
+            "atmosphere": "试探",
+            "technicalNotes": "瞳孔特写，捕捉一瞬的颤动"
+          },
+          "actingNotes": [
+            { "name": "陈泽川", "acting": "睫毛微颤，呼吸放缓" }
+          ],
+          "audio": {
+            "dialogue": [],
+            "sfx": "心跳声渐起",
+            "bgm": "鼓点暂停"
+          }
+        },
+        {
+          "panel_number": 4,
+          "shot_type": "近景",
+          "camera_move": "侧拍",
+          "duration": "3s",
+          "description": "Kace 倾身贴近 Zen 耳边",
+          "photographyPlan": {
+            "lighting": "侧逆光，剪影感",
+            "colorPalette": "暖橙 + 暗影",
+            "atmosphere": "占有",
+            "technicalNotes": "气音可见呼吸"
+          },
+          "actingNotes": [
+            { "name": "凯斯·诺克斯", "acting": "弯腰，唇贴近 Zen 耳廓" }
+          ],
+          "audio": {
+            "dialogue": [
+              { "type": "dialogue", "character": "Kace", "text": "ZK Entertainment. I'm buying it.", "voice_note": "气音，缓慢，每个词分开" }
+            ],
+            "sfx": "气息声",
+            "bgm": "鼓点重新进入，更重"
+          }
+        },
+        {
+          "panel_number": 5,
+          "shot_type": "特写截断",
+          "camera_move": "固定",
+          "duration": "3s",
+          "description": "Zen 倒抽一口气，画面冻结，黑屏",
+          "photographyPlan": {
+            "lighting": "高对比，瞳孔放大可见",
+            "colorPalette": "暖光转黑",
+            "atmosphere": "震荡",
+            "technicalNotes": "最后 0.5s 黑屏"
+          },
+          "actingNotes": [
+            { "name": "陈泽川", "acting": "嘴唇微张，气息吸入半截，定格" }
+          ],
+          "audio": {
+            "dialogue": [],
+            "sfx": "急促吸气声",
+            "bgm": "鼓点截断 → 黑屏静默 0.5s"
+          }
+        }
+      ]
+    },
+    {
+      "clip_id": "EP{{EP}}-C2",
+      "segment": "Seg2",
+      "screenplay": { "title": "...", "content": ["..."] },
+      "panels": []
+    },
+    {
+      "clip_id": "EP{{EP}}-C3",
+      "segment": "Seg3",
+      "screenplay": { "title": "...", "content": ["..."] },
+      "panels": []
+    }
+  ]
+}

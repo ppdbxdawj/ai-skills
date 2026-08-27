@@ -1,0 +1,6 @@
+.env
+.env.ark
+.env.*
+*.key
+output/
+.venv/
