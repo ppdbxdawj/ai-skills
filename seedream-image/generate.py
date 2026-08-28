@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 """
-Seedream 4.0 (jimeng_t2i_v40) Image Generation Script
+Seedream 4.0 Image Generation Script
 
 Usage:
     python generate.py --prompt "一只猫在花园里玩耍，水彩风格"
     python generate.py --prompt "将背景换成海边" --image-urls "https://example.com/photo.jpg"
     python generate.py --prompt "生成一组盲盒" --width 2048 --height 2048
 
-Credentials (either):
-    - Environment variables: VOLC_ACCESSKEY, VOLC_SECRETKEY
-    - Or a .env file in the script directory or current directory, with:
-        VOLC_ACCESSKEY=your_access_key
-        VOLC_SECRETKEY=your_secret_key
+Providers:
+    - Volcengine (default): VOLC_ACCESSKEY and VOLC_SECRETKEY
+    - Atlas Cloud: ATLASCLOUD_API_KEY and --provider atlas
 """
 
 import argparse
@@ -22,23 +20,21 @@ import time
 import base64
 from pathlib import Path
 
-try:
-    from volcengine.visual.VisualService import VisualService
-except ImportError:
-    print("Error: volcengine SDK not found. Install it with:")
-    print("  pip install volcengine")
-    sys.exit(1)
-
 REQ_KEY = "jimeng_t2i_v40"
 DEFAULT_POLL_INTERVAL = 3
 DEFAULT_MAX_WAIT = 300
 TERMINAL_STATUSES = {"done", "not_found", "expired"}
+ATLAS_BASE_URL = "https://api.atlascloud.ai/api/v1/model"
+ATLAS_MODELS = {
+    (False, False): "bytedance/seedream-v4",
+    (True, False): "bytedance/seedream-v4/edit",
+    (False, True): "bytedance/seedream-v4/sequential",
+    (True, True): "bytedance/seedream-v4/edit-sequential",
+}
 
 
 def _load_dotenv() -> None:
-    """Load VOLC_ACCESSKEY / VOLC_SECRETKEY from .env if not already in os.environ."""
-    if os.environ.get("VOLC_ACCESSKEY") and os.environ.get("VOLC_SECRETKEY"):
-        return
+    """Load missing provider credentials from a local .env file."""
     for base in (Path(__file__).resolve().parent, Path.cwd()):
         env_file = base / ".env"
         if not env_file.is_file():
@@ -55,7 +51,7 @@ def _load_dotenv() -> None:
         break
 
 
-def create_service() -> VisualService:
+def create_volcengine_service():
     _load_dotenv()
     ak = os.environ.get("VOLC_ACCESSKEY")
     sk = os.environ.get("VOLC_SECRETKEY")
@@ -63,6 +59,13 @@ def create_service() -> VisualService:
         print("Error: VOLC_ACCESSKEY and VOLC_SECRETKEY are required.")
         print("Set them via: 1) environment variables, or 2) a .env file in this directory.")
         print("Get credentials: https://console.volcengine.com/iam/keymanage/")
+        sys.exit(1)
+
+    try:
+        from volcengine.visual.VisualService import VisualService
+    except ImportError:
+        print("Error: volcengine SDK not found. Install it with:")
+        print("  pip install volcengine")
         sys.exit(1)
 
     service = VisualService()
@@ -73,7 +76,7 @@ def create_service() -> VisualService:
 
 
 def submit_task(
-    service: VisualService,
+    service,
     prompt: str,
     image_urls: list[str] | None = None,
     size: int | None = None,
@@ -128,7 +131,7 @@ def submit_task(
 
 
 def query_task(
-    service: VisualService,
+    service,
     task_id: str,
     return_url: bool = True,
     add_logo: bool = False,
@@ -152,7 +155,7 @@ def query_task(
 
 
 def poll_until_done(
-    service: VisualService,
+    service,
     task_id: str,
     poll_interval: int = DEFAULT_POLL_INTERVAL,
     max_wait: int = DEFAULT_MAX_WAIT,
@@ -191,6 +194,122 @@ def poll_until_done(
             sys.exit(1)
 
         # in_queue / generating
+        print(f"  [{elapsed:.0f}s] status: {status}", end="\r", flush=True)
+        time.sleep(poll_interval)
+
+
+def build_atlas_payload(
+    prompt: str,
+    image_urls: list[str] | None,
+    width: int | None,
+    height: int | None,
+    force_single: bool,
+    max_images: int,
+) -> dict:
+    is_edit = bool(image_urls)
+    is_sequential = not force_single
+    payload = {
+        "model": ATLAS_MODELS[(is_edit, is_sequential)],
+        "prompt": prompt,
+    }
+    if image_urls:
+        payload["images"] = image_urls
+    if width is not None and height is not None:
+        payload["size"] = f"{width}*{height}"
+    if is_sequential:
+        payload["max_images"] = max_images
+    return payload
+
+
+def _atlas_data(resp: dict) -> dict:
+    data = resp.get("data")
+    return data if isinstance(data, dict) else resp
+
+
+def submit_atlas_task(payload: dict) -> str:
+    import requests
+
+    _load_dotenv()
+    api_key = os.environ.get("ATLASCLOUD_API_KEY")
+    if not api_key:
+        print("Error: ATLASCLOUD_API_KEY is required for --provider atlas.")
+        sys.exit(1)
+
+    print("Submitting task...")
+    print(f"  prompt: {payload['prompt']}")
+    if payload.get("images"):
+        print(f"  image_urls: {len(payload['images'])} image(s)")
+
+    try:
+        resp = requests.post(
+            f"{ATLAS_BASE_URL}/generateImage",
+            headers={"Authorization": f"Bearer {api_key}"},
+            json=payload,
+            timeout=60,
+        )
+        resp.raise_for_status()
+        body = resp.json()
+    except (requests.RequestException, ValueError) as exc:
+        print(f"Submit request failed: {exc}")
+        sys.exit(1)
+
+    if body.get("code") not in (None, 200):
+        print(f"Submit failed (code={body.get('code')}): {body.get('message')}")
+        sys.exit(1)
+
+    data = _atlas_data(body)
+    task_id = data.get("id") or data.get("request_id")
+    if not task_id:
+        print("Submit failed: response did not include a prediction ID.")
+        sys.exit(1)
+    print(f"  task_id: {task_id}")
+    return task_id
+
+
+def poll_atlas_until_done(
+    task_id: str,
+    poll_interval: int = DEFAULT_POLL_INTERVAL,
+    max_wait: int = DEFAULT_MAX_WAIT,
+) -> dict:
+    import requests
+
+    api_key = os.environ["ATLASCLOUD_API_KEY"]
+    start = time.time()
+    attempt = 0
+
+    while True:
+        elapsed = time.time() - start
+        if elapsed > max_wait:
+            print(f"\nTimeout: task not completed after {max_wait}s")
+            sys.exit(1)
+
+        attempt += 1
+        try:
+            resp = requests.get(
+                f"{ATLAS_BASE_URL}/prediction/{task_id}",
+                headers={"Authorization": f"Bearer {api_key}"},
+                timeout=30,
+            )
+            resp.raise_for_status()
+            body = resp.json()
+        except (requests.RequestException, ValueError) as exc:
+            print(f"\nQuery failed: {exc}")
+            sys.exit(1)
+
+        if body.get("code") not in (None, 200):
+            print(f"\nQuery failed (code={body.get('code')}): {body.get('message')}")
+            sys.exit(1)
+
+        data = _atlas_data(body)
+        status = str(data.get("status", "unknown")).lower()
+        if status in {"completed", "succeeded"}:
+            print(f"\nTask completed! (attempt #{attempt}, {elapsed:.1f}s)")
+            outputs = data.get("outputs") or []
+            return {"data": {"image_urls": outputs}}
+        if status in {"failed", "canceled", "cancelled"}:
+            print(f"\nTask {status}: {data.get('error') or data.get('message') or 'unknown error'}")
+            sys.exit(1)
+
         print(f"  [{elapsed:.0f}s] status: {status}", end="\r", flush=True)
         time.sleep(poll_interval)
 
@@ -246,6 +365,12 @@ def save_images(resp: dict, output_dir: str) -> list[str]:
 
 def main():
     parser = argparse.ArgumentParser(description="Seedream 4.0 Image Generation")
+    parser.add_argument(
+        "--provider",
+        choices=("volcengine", "atlas"),
+        default="volcengine",
+        help="Generation provider (default: volcengine)",
+    )
     parser.add_argument("--prompt", required=True, help="Image generation prompt")
     parser.add_argument("--image-urls", nargs="*", default=None, help="Input image URLs (up to 10)")
     parser.add_argument("--size", type=int, default=None, help="Output area in pixels (e.g. 4194304 = 2048*2048)")
@@ -261,37 +386,75 @@ def main():
     parser.add_argument("--max-wait", type=int, default=DEFAULT_MAX_WAIT, help="Max seconds to wait")
     parser.add_argument("--no-url", action="store_true", help="Don't request URL format (use base64)")
     parser.add_argument("--watermark", action="store_true", help="Add AI watermark to output")
+    parser.add_argument(
+        "--max-images",
+        type=int,
+        default=4,
+        help="Atlas sequential output limit, 1-14 (default: 4)",
+    )
 
     args = parser.parse_args()
 
-    service = create_service()
+    if (args.width is None) != (args.height is None):
+        parser.error("--width and --height must be used together")
 
-    # Submit
-    submit_resp = submit_task(
-        service,
-        prompt=args.prompt,
-        image_urls=args.image_urls,
-        size=args.size,
-        width=args.width,
-        height=args.height,
-        scale=args.scale,
-        force_single=args.force_single,
-        min_ratio=args.min_ratio,
-        max_ratio=args.max_ratio,
-    )
+    if args.provider == "atlas":
+        if not 1 <= args.max_images <= 14:
+            parser.error("--max-images must be between 1 and 14")
+        unsupported = [
+            name
+            for name, value in (
+                ("--size", args.size),
+                ("--scale", args.scale),
+                ("--min-ratio", args.min_ratio),
+                ("--max-ratio", args.max_ratio),
+                ("--no-url", args.no_url),
+                ("--watermark", args.watermark),
+            )
+            if value not in (None, False)
+        ]
+        if unsupported:
+            parser.error(f"unsupported with --provider atlas: {', '.join(unsupported)}")
 
-    task_id = submit_resp["data"]["task_id"]
-
-    # Poll
-    print("Waiting for generation...")
-    result = poll_until_done(
-        service,
-        task_id,
-        poll_interval=args.poll_interval,
-        max_wait=args.max_wait,
-        return_url=not args.no_url,
-        add_logo=args.watermark,
-    )
+        payload = build_atlas_payload(
+            prompt=args.prompt,
+            image_urls=args.image_urls,
+            width=args.width,
+            height=args.height,
+            force_single=args.force_single,
+            max_images=args.max_images,
+        )
+        task_id = submit_atlas_task(payload)
+        print("Waiting for generation...")
+        result = poll_atlas_until_done(
+            task_id,
+            poll_interval=args.poll_interval,
+            max_wait=args.max_wait,
+        )
+    else:
+        service = create_volcengine_service()
+        submit_resp = submit_task(
+            service,
+            prompt=args.prompt,
+            image_urls=args.image_urls,
+            size=args.size,
+            width=args.width,
+            height=args.height,
+            scale=args.scale,
+            force_single=args.force_single,
+            min_ratio=args.min_ratio,
+            max_ratio=args.max_ratio,
+        )
+        task_id = submit_resp["data"]["task_id"]
+        print("Waiting for generation...")
+        result = poll_until_done(
+            service,
+            task_id,
+            poll_interval=args.poll_interval,
+            max_wait=args.max_wait,
+            return_url=not args.no_url,
+            add_logo=args.watermark,
+        )
 
     # Save / display results
     saved = save_images(result, args.output_dir)

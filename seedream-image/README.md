@@ -37,7 +37,7 @@ Manual: `git clone https://github.com/ppdbxdawj/ai-skills.git` → `cp -r ai-ski
 2. **Review** the agent-generated Seedream prompt.
 3. **Confirm** (and say if you need multiple images). The agent runs the API and downloads to `output/`.
 
-**One-time setup:** [Volcengine IAM](https://console.volcengine.com/iam/keymanage/) keys + enable [Jimeng 4.0](https://console.volcengine.com/ai/ability/detail/10). In the folder that contains `generate.py`, create `.env` with `VOLC_ACCESSKEY` and `VOLC_SECRETKEY`, or export them. Run `pip install -r requirements.txt`. Do not commit `.env`.
+**One-time setup:** Run `pip install -r requirements.txt`, then configure one provider. Volcengine remains the default: create `.env` beside `generate.py` with `VOLC_ACCESSKEY` and `VOLC_SECRETKEY` after enabling [Jimeng 4.0](https://console.volcengine.com/ai/ability/detail/10). Alternatively, set `ATLASCLOUD_API_KEY` and pass `--provider atlas` to use Atlas Cloud. Do not commit `.env`.
 
 ### Example Prompts
 
@@ -93,6 +93,13 @@ python generate.py --prompt "Product hero shot" --width 2560 --height 1440
 
 # Group image generation (use --no-force-single)
 python generate.py --prompt "Generate 4 blind box figures: crow, rabbit, dog, cat" --no-force-single
+
+# Optional Atlas Cloud provider (Volcengine stays the default)
+python generate.py --provider atlas --prompt "A cute cat in a garden, watercolor style"
+
+# Atlas image editing and sequential output
+python generate.py --provider atlas --prompt "Change background to beach" \
+  --image-urls "https://example.com/photo.jpg" --no-force-single --max-images 3
 ```
 
 </details>
@@ -133,7 +140,7 @@ npx skills add ppdbxdawj/ai-skills@seedream-image
 2. **审核** Agent 生成的 Seedream 提示词
 3. **确认**（需多张时说明），Agent 调 API 并下载到 `output/`
 
-**首次配置**：在 [火山引擎 IAM](https://console.volcengine.com/iam/keymanage/) 获取密钥并开通 [即梦 4.0](https://console.volcengine.com/ai/ability/detail/10)。在 `generate.py` 所在目录建 `.env` 写入 `VOLC_ACCESSKEY`、`VOLC_SECRETKEY`，或使用环境变量。执行 `pip install -r requirements.txt`。勿提交 `.env`。
+**首次配置**：先执行 `pip install -r requirements.txt`，再配置一个 provider。火山引擎仍为默认选项：开通 [即梦 4.0](https://console.volcengine.com/ai/ability/detail/10) 后，在 `generate.py` 同目录的 `.env` 写入 `VOLC_ACCESSKEY`、`VOLC_SECRETKEY`。也可设置 `ATLASCLOUD_API_KEY`，并通过 `--provider atlas` 使用 Atlas Cloud。勿提交 `.env`。
 
 ### 提示词示例
 
@@ -186,6 +193,13 @@ python generate.py --prompt "电商主图，产品特写" --width 2560 --height 
 
 # 组图生成（加 --no-force-single）
 python generate.py --prompt "生成4张分别关于春夏秋冬的盲盒组图" --no-force-single
+
+# 可选 Atlas Cloud provider（默认仍为火山引擎）
+python generate.py --provider atlas --prompt "一只猫在花园里玩耍，水彩风格"
+
+# Atlas 图像编辑与组图
+python generate.py --provider atlas --prompt "将背景换成海滩" \
+  --image-urls "https://example.com/photo.jpg" --no-force-single --max-images 3
 ```
 
 </details>

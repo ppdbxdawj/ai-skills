@@ -186,11 +186,16 @@ Seedream 5.0 是字节跳动推出的新一代 AI 图像生成模型，已在即
 
 ## API 生图脚本 | Image Generation Script
 
-`generate.py` 调用即梦 4.0 API，图片自动下载到 `--output-dir`（默认 `output/`）。
+`generate.py` 默认调用火山引擎即梦 4.0 API，也可显式选择 Atlas Cloud；两条路径都会将图片下载到 `--output-dir`（默认 `output/`）。
 
 ### 环境准备
 
-在 `generate.py` 同目录建 `.env` 写入 `VOLC_ACCESSKEY`、`VOLC_SECRETKEY`，或终端 export。脚本自动读取同目录 `.env`。`pip install -r requirements.txt`。
+执行 `pip install -r requirements.txt`，然后配置一个 provider：
+
+- 默认火山引擎：设置 `VOLC_ACCESSKEY`、`VOLC_SECRETKEY`
+- 可选 Atlas Cloud：设置 `ATLASCLOUD_API_KEY`，命令增加 `--provider atlas`
+
+脚本会读取同目录或当前目录的 `.env`，勿将凭据提交到仓库。
 
 ### 用法
 
@@ -206,6 +211,13 @@ python generate.py --prompt "电商主图，产品特写" --width 2560 --height 
 
 # 组图生成
 python generate.py --prompt "生成4张分别关于春夏秋冬的盲盒组图"
+
+# 通过 Atlas Cloud 文生图（默认 provider 不变）
+python generate.py --provider atlas --prompt "一只猫在花园里玩耍，水彩风格"
+
+# 通过 Atlas Cloud 编辑并生成最多 3 张图
+python generate.py --provider atlas --prompt "将背景换成海滩" \
+  --image-urls "https://example.com/photo.jpg" --no-force-single --max-images 3
 ```
 
 ### 在 Skill 工作流中使用
@@ -219,6 +231,7 @@ python generate.py --prompt "生成4张分别关于春夏秋冬的盲盒组图"
 
 | 参数 | 说明 |
 |------|------|
+| `--provider` | `volcengine`（默认）或可选的 `atlas` |
 | `--prompt` | 必填，提示词 |
 | `--image-urls` | 输入参考图 URL（最多 10 张） |
 | `--width` / `--height` | 指定输出宽高（需同时传），不传则智能适配 |
@@ -226,6 +239,7 @@ python generate.py --prompt "生成4张分别关于春夏秋冬的盲盒组图"
 | `--scale` | 文本影响程度 0~1（默认 0.5），越大文本越强 |
 | `--force-single` | 只输出 1 张图（**默认**） |
 | `--no-force-single` | 允许多张（组图），由模型根据提示词决定张数 |
+| `--max-images` | Atlas 组图最大张数，1~14（默认 4） |
 | `--watermark` | 添加 AI 水印 |
 | `--output-dir` | 生成图片保存目录（默认 output/），URL 与 base64 均会写入此处 |
 
